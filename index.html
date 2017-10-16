@@ -40,6 +40,7 @@
                     <th>Train Name</th>
                     <th>Destination</th>
                     <th>Frequency (min)</th>
+                    <th>First Arrival</th>
                     <th>Next Arrival</th>
                     <th>Minutes Away</th>
                   </tr>
@@ -52,6 +53,7 @@
                     <td>Is</td>
                     <td>A</td>
                     <td>Test</td>
+                    <td>Cool</td>
                   </tr>
                   <!--New train rows appended here-->
                 </tbody>
@@ -79,12 +81,12 @@
                     <input type="text" class="form-control" id="place-input">
                 </div>
                 <div class="form-group">
-                    <label for="time-input">First Train Time (HH:mm-military time)</label>
-                    <input type="text" class="form-control" id="time-input">
-                </div>
-                <div class="form-group">
                     <label for="rate-input">Frequency (min)</label>
                     <input type="text" class="form-control" id="rate-input">
+                </div>
+                <div class="form-group">
+                    <label for="time-input">First Train Time (HH:mm-military time)</label>
+                    <input type="time" class="form-control" id="time-input">
                 </div>
                 <button type="button" class="btn btn-info">Submit</button>
               </form>
