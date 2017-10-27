@@ -1,3 +1,17 @@
+body {
+    background: url("../images/tiny_grid.png");
+    background-repeat: repeat;
+}
 form {
     padding: 10px;
+}
+.header {
+    background-color: rgb(12, 166, 184);
+    color: rgb(34, 34, 34);
+}
+.card-header {
+    background-color: rgb(143, 230, 240);
+}
+.card {
+    border: 1px solid rgb(175, 175, 175);
 }

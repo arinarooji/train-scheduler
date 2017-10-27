@@ -32,6 +32,7 @@ $(".btn").on("click", function(){
             //timeRemaining (updates each minute)
         });
 
+        //APPEND FROM SERVER, NOT LOCAL
         //Append new data to table
         var trainName = $("<td>").append($("#name-input").val())
         var trainPlace = $("<td>").append($("#place-input").val());
