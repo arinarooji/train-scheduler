@@ -19,7 +19,7 @@ var newTrainRef = trainsRef.push();
 //Update table when values change in the server
 trainsRef.on("value", snap => {
     $("#table-body").empty();
-    return snap.forEach(snap => {
+    snap.forEach(snap => {
         appender(snap.val());
     });
 });
@@ -43,6 +43,7 @@ $(".btn").on("click", function(){
         });
     }
 });
+
 
 /*FUNCTIONS USED*/
 
@@ -75,6 +76,12 @@ function newArrival (firstArrival, frequency) {
     //Return updated arrival time
     return nextArrival;
 }
+
+/*TIME LEFT
+//Calculates the time remaining between a start and endpoint in a space-time continuum flux capacitor simulation
+function timeLeft(start, end) {
+    
+}*/
 
 //APPENDER
 //Appends train data to the HTML table body
