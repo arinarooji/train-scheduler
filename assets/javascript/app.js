@@ -13,15 +13,13 @@ firebase.initializeApp(config);
 var database = firebase.database();
 
 //Update table when values change in the server
-database.ref('trains').on("value", snap => {
-    var data = snap.val();
-    /*
+database.ref('trains/').on("value", snap => {
     $("#table-body").empty();
     snap.forEach(snap => {
-        appender(data);
+        console.log(snap.val());
+        appender(snap.val());
     });
-    */
-    console.log(data);
+    
 });
 
 //On button click...
@@ -34,7 +32,6 @@ $(".btn").on("click", function(){
     
     //If all fields are entered correctly...
     if (nameInput !== "" && placeInput !== "" && !isNaN(rateInput) && timeInput !== ""){
-        console.log("All fields entered");
 
         //Create a local train object with properties equal to respective input values
         var train = {
@@ -46,11 +43,8 @@ $(".btn").on("click", function(){
             minutesAway: "TBD"
         }
 
-        //Log local object
-        console.log(train);
-
         //Push to server as a child of trains
-        database.ref('trains').push(train);
+        database.ref('trains/').push(train);
     }
 });
 
@@ -101,9 +95,11 @@ function appender(train) {
     var frequency   = $("<td>").append(train.frequency);
     var initialTime = $("<td>").append(train.initialTime);
     var newArrival  = $("<td>").append(train.newArrival);
-    //AND minutes away (duration?)
+    var minutesAway = $("<td>").append(train.minutesAway);
+
     //Append all data to row in correct order
-    var newTrainRow = $("<tr>").append(name, destination, frequency, initialTime, newArrival);
+    var newTrainRow = $("<tr>").append(name, destination, frequency, initialTime, newArrival, minutesAway);
+
     //All data in correct order goes to the table body
     $("#table-body").append(newTrainRow);
 }
