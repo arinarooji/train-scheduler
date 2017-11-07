@@ -10,37 +10,47 @@ var config = {
 firebase.initializeApp(config);
 
 //Reference the database
-var rootRef = firebase.database().ref();
-//Reference the root's child
-var trainsRef = rootRef.child("trains");
-//Variable to push new train as a child of "trains"
-var newTrainRef = trainsRef.push();
+var database = firebase.database();
 
 //Update table when values change in the server
-trainsRef.on("value", snap => {
+database.ref('trains').on("value", snap => {
+    var data = snap.val();
+    /*
     $("#table-body").empty();
     snap.forEach(snap => {
-        appender(snap.val());
+        appender(data);
     });
+    */
+    console.log(data);
 });
 
 //On button click...
 $(".btn").on("click", function(){
-    //Get input from the user, ensuring all values entered (input)
-    if ($("input").val().trim() !== "" && $("#time-input").val() !== ""){
-        //Store time string and rate integer from HTML
-        var initialTime = $("#time-input").val();
-        var rate = $("#rate-input").val();
-        
-        //Push the new train data to the server using necessary functions
-        newTrainRef.set({
-            name: $("#name-input").val(),
-            destination: $("#place-input").val(),
-            frequency: $("#rate-input").val(),
-            initialTime: convertTime(initialTime),
-            newArrival: newArrival(initialTime, rate)
-            //timeRemaining (updates each minute)
-        });
+    //Reference all input fields
+    var nameInput  = $("#name-input").val().trim();
+    var placeInput = $("#place-input").val().trim();
+    var rateInput  = parseInt($("#rate-input").val().trim());
+    var timeInput  = $("#time-input").val().trim();
+    
+    //If all fields are entered correctly...
+    if (nameInput !== "" && placeInput !== "" && !isNaN(rateInput) && timeInput !== ""){
+        console.log("All fields entered");
+
+        //Create a local train object with properties equal to respective input values
+        var train = {
+            name       : nameInput,
+            destination: placeInput,
+            frequency  : rateInput,
+            initialTime: timeInput,
+            newArrival : newArrival(timeInput, rateInput),
+            minutesAway: "TBD"
+        }
+
+        //Log local object
+        console.log(train);
+
+        //Push to server as a child of trains
+        database.ref('trains').push(train);
     }
 });
 
