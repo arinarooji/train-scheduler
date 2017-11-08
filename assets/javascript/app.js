@@ -16,10 +16,8 @@ var database = firebase.database();
 database.ref('trains/').on("value", snap => {
     $("#table-body").empty();
     snap.forEach(snap => {
-        console.log(snap.val());
         appender(snap.val());
     });
-    
 });
 
 //On button click...
@@ -32,7 +30,6 @@ $(".btn").on("click", function(){
     
     //If all fields are entered correctly...
     if (nameInput !== "" && placeInput !== "" && !isNaN(rateInput) && timeInput !== ""){
-
         //Create a local train object with properties equal to respective input values
         var train = {
             name       : nameInput,
@@ -40,13 +37,37 @@ $(".btn").on("click", function(){
             frequency  : rateInput,
             initialTime: timeInput,
             newArrival : newArrival(timeInput, rateInput),
-            minutesAway: "TBD"
+            minutesAway: moment(newArrival(timeInput, rateInput), 'HH:mm A').fromNow(moment().format("HH:mm A"))
         }
-
         //Push to server as a child of trains
         database.ref('trains/').push(train);
     }
+    
 });
+
+//Update every 20 seconds (local)
+setInterval(function() {
+    //Get current time
+    var current = moment().format("HH:mm A");
+    
+    //Recalculate minutes away for each train in the database
+    database.ref('trains/').once("value", snap => {
+        //Iterate through firebase
+        snap.forEach(snap => {
+            //Reference time left for current train
+            var timeLeft = moment(snap.val().newArrival, 'HH:mm A').fromNow(current);
+            //If one minute left, update new arrival time
+            if (timeLeft === 'a few seconds') {
+                snap.ref.update({ newArrival : moment(snap.val().newArrival, "HH:mm A").add(snap.val().frequency, "minutes").format("HH:mm A") });
+            }
+            //Update minutes away
+            snap.ref.update({ minutesAway: moment(snap.val().newArrival, 'HH:mm A').fromNow(moment().format("HH:mm A"))});
+        });
+    });
+
+}, 20000);
+
+
 
 
 /*FUNCTIONS USED*/
@@ -80,12 +101,6 @@ function newArrival (firstArrival, frequency) {
     //Return updated arrival time
     return nextArrival;
 }
-
-/*TIME LEFT
-//Calculates the time remaining between a start and endpoint in a space-time continuum flux capacitor simulation
-function timeLeft(start, end) {
-    
-}*/
 
 //APPENDER
 //Appends train data to the HTML table body
