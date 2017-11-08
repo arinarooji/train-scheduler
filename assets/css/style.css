@@ -2,6 +2,7 @@ body {
     background-image: url("../images/cloud.png");
     background-repeat: repeat;
     animation: animatedBackground 20s linear infinite;
+    max-height:150%;
 }
 form {
     padding: 10px;
@@ -19,9 +20,22 @@ form {
 #table-scroll {
     overflow: auto;
 }
+.train-img	{ 
+    animation:  goRight 8s infinite;
+}
 
 @keyframes animatedBackground {
 	0% { background-position: 0 0; }
     50% { background-position: 50% 0; }
     100% { background-position: 0% 0; }
 }
+
+@keyframes goRight {
+    from {
+      transform: translate(-1920px,0);
+    }
+  
+    to {
+      transform: translate(1920px,0);
+    }
+  }
