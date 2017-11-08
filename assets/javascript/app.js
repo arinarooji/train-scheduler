@@ -1,8 +1,3 @@
-/*TO DO
-    Minutes away must calculate in minutes only (>45 shows as a day)
-    Styling
-*/
-
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyDULhMRgwWmnuikc1SEhioUHTgdRhMZYy0",
@@ -22,7 +17,7 @@ var database = firebase.database();
 database.ref('trains/').once("value", snap => {
     snap.forEach(snap => {
         snap.ref.update({
-            newArrival : newArrival(snap.val().initialTime, snap.val().frequency),
+            newArrival : NewArrival(snap.val().initialTime, snap.val().frequency),
             minutesAway: moment(snap.val().newArrival, 'HH:mm').fromNow(moment().format("HH:mm"))
         });
     });
@@ -32,7 +27,7 @@ database.ref('trains/').once("value", snap => {
 database.ref('trains/').on("value", snap => {
     $("#table-body").empty();
     snap.forEach(snap => {
-        appender(snap.val());
+        AppendToTable(snap.val());
     });
 });
 
@@ -52,13 +47,12 @@ $(".btn").on("click", function () {
             destination: placeInput,
             frequency  : rateInput,
             initialTime: timeInput,
-            newArrival : newArrival(timeInput, rateInput),
-            minutesAway: moment(newArrival(timeInput, rateInput), 'HH:mm').fromNow(moment().format("HH:mm")),
+            newArrival : NewArrival(timeInput, rateInput),
+            minutesAway: moment(NewArrival(timeInput, rateInput), 'HH:mm').fromNow(moment().format("HH:mm")),
         }
         //Push to server as a child of trains
         database.ref('trains/').push(train);
     }
-
 });
 
 //Update minutesAway every 20 seconds (accuracy)
@@ -84,14 +78,10 @@ setInterval( function() {
     });
 }, 20000)
 
-//CONVERT TIME: Convert time into Moment object using 24-hr format
-function convertTime(timeString) {
-    timestring = moment(timeString, "HH:mm").format("HH:mm");
-    return timeString;
-}
+
 
 //NEW ARRIVAL: Calculates the nextArrival time with these two parameters and the current time
-function newArrival(firstArrival, frequency) {
+function NewArrival(firstArrival, frequency) {
     //Calculate next arrival based on initial time/rate, get current time
     var nextArrival = moment(firstArrival, "HH:mm").add(frequency, "minutes").format("HH:mm");
     var current     = moment().format("HH:mm");
@@ -115,9 +105,8 @@ function newArrival(firstArrival, frequency) {
     return nextArrival;
 }
 
-//APPENDER
-//Appends train data to the HTML table body
-function appender(train) {
+//AppendToTable: Appends train data to the HTML table body
+function AppendToTable(train) {
     //Create a data cell for each variable
     var name        = $("<td>").append(train.name);
     var destination = $("<td>").append(train.destination);
