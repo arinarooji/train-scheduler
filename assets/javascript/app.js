@@ -42,32 +42,30 @@ $(".btn").on("click", function(){
         //Push to server as a child of trains
         database.ref('trains/').push(train);
     }
-    
+
 });
 
 //Update every 20 seconds (local)
 setInterval(function() {
     //Get current time
-    var current = moment().format("HH:mm A");
+    var current = moment().format("HH:mm");
     
     //Recalculate minutes away for each train in the database
     database.ref('trains/').once("value", snap => {
         //Iterate through firebase
         snap.forEach(snap => {
             //Reference time left for current train
-            var timeLeft = moment(snap.val().newArrival, 'HH:mm A').fromNow(current);
+            var timeLeft = moment(snap.val().newArrival, 'HH:mm').fromNow(current);
             //If one minute left, update new arrival time
             if (timeLeft === 'a few seconds') {
-                snap.ref.update({ newArrival : moment(snap.val().newArrival, "HH:mm A").add(snap.val().frequency, "minutes").format("HH:mm A") });
+                snap.ref.update({ newArrival : moment(snap.val().newArrival, "HH:mm").add(snap.val().frequency, "minutes").format("HH:mm") });
             }
             //Update minutes away
-            snap.ref.update({ minutesAway: moment(snap.val().newArrival, 'HH:mm A').fromNow(moment().format("HH:mm A"))});
+            snap.ref.update({ minutesAway: moment(snap.val().newArrival, 'HH:mm').fromNow(moment().format("HH:mm"))});
         });
     });
 
 }, 20000);
-
-
 
 
 /*FUNCTIONS USED*/
@@ -75,7 +73,7 @@ setInterval(function() {
 //CONVERT TIME
 //Convert time into Moment object using 24-hr format
 function convertTime (timeString) {
-    timestring = moment(timeString, "HH:mm A").format("HH:mm");
+    timestring = moment(timeString, "HH:mm").format("HH:mm");
     return timeString;
 }
 
@@ -83,8 +81,8 @@ function convertTime (timeString) {
 //Calculates the nextArrival time with these two parameters and the current time
 function newArrival (firstArrival, frequency) {
     //Calculate next arrival based on initial time/rate, get current time
-    var nextArrival = moment(firstArrival, "HH:mm").add(frequency, "minutes").format("HH:mm A");
-    var current = moment().format("HH:mm A");
+    var nextArrival = moment(firstArrival, "HH:mm").add(frequency, "minutes").format("HH:mm");
+    var current = moment().format("HH:mm");
     //Replace colon with decimal point for parseFloat, number comparison purposes
     var convertNext = nextArrival.replace(":", ".");
     var convertCurrent = current.replace(":", ".");
