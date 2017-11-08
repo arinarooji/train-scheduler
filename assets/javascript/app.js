@@ -40,7 +40,7 @@ $(".btn").on("click", function () {
     var timeInput  = $("#time-input").val().trim();
 
     //If all fields are entered correctly...
-    if (nameInput !== "" && placeInput !== "" && !isNaN(rateInput) && timeInput !== "") {
+    if (nameInput !== "" && placeInput !== "" && !isNaN(rateInput) && rateInput > 1 && timeInput !== "") {
         //Create a local train object with properties equal to respective input values
         var train = {
             name       : nameInput,

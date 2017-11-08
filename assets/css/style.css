@@ -21,7 +21,7 @@ form {
     overflow: auto;
 }
 .train-img	{ 
-    animation:  goRight 8s infinite;
+    animation:  goRight 7s infinite;
 }
 
 @keyframes animatedBackground {
