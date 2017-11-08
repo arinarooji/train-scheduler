@@ -11,13 +11,13 @@ form {
     color: rgb(34, 34, 34);
 }
 .card-header {
-    background-color: rgb(143, 230, 240);
-}
-.card {
-    border: 1px solid rgb(175, 175, 175);
+    background-color: rgb(12, 184, 141);
 }
 .btn:hover {
     cursor: pointer;
+}
+#table-scroll {
+    overflow: auto;
 }
 
 @keyframes animatedBackground {

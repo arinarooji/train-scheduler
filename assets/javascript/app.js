@@ -1,6 +1,5 @@
 /*TO DO
     Minutes away must calculate in minutes only (>45 shows as a day)
-    Responsiveness (Overflow scroll)
     Styling
 */
 
@@ -62,7 +61,7 @@ $(".btn").on("click", function () {
 
 });
 
-//Update minutesAway every 15 seconds (accuracy)
+//Update minutesAway every 20 seconds (accuracy)
 setInterval( function() {
     //Reference current time
     var current = moment().format("HH:mm");
@@ -83,7 +82,7 @@ setInterval( function() {
             });
         });
     });
-}, 15000)
+}, 20000)
 
 //CONVERT TIME: Convert time into Moment object using 24-hr format
 function convertTime(timeString) {
