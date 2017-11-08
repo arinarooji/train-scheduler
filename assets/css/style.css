@@ -1,12 +1,13 @@
 body {
-    background: url("../images/tiny_grid.png");
+    background-image: url("../images/cloud.png");
     background-repeat: repeat;
+    animation: animatedBackground 20s linear infinite;
 }
 form {
     padding: 10px;
 }
 .header {
-    background-color: rgb(12, 166, 184);
+    background-color: rgb(12, 184, 141);
     color: rgb(34, 34, 34);
 }
 .card-header {
@@ -14,4 +15,13 @@ form {
 }
 .card {
     border: 1px solid rgb(175, 175, 175);
+}
+.btn:hover {
+    cursor: pointer;
+}
+
+@keyframes animatedBackground {
+	0% { background-position: 0 0; }
+    50% { background-position: 50% 0; }
+    100% { background-position: 0% 0; }
 }

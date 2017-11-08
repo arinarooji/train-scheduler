@@ -1,3 +1,9 @@
+/*TO DO
+    Minutes away must calculate in minutes only (>45 shows as a day)
+    Responsiveness (Overflow scroll)
+    Styling
+*/
+
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyDULhMRgwWmnuikc1SEhioUHTgdRhMZYy0",
