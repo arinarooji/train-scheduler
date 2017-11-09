@@ -52,8 +52,6 @@ $(".btn").on("click", function () {
 function UpdateAllTrains() {
     //Contact 'trains' in firebase
     database.ref('trains/').once("value", snap => {
-        //Empty table of potentially outdated values
-        $("#table-body").empty();
         //Iterate through children of 'trains' in firebase    
         snap.forEach(snap => {
             //Update minutesAway using current time and newArrival (using NewArrival())
@@ -61,10 +59,19 @@ function UpdateAllTrains() {
                 minutesAway: moment(snap.val().newArrival, 'HH:mm').fromNow(moment().format("HH:mm")),
                 newArrival : NewArrival(snap.val().initialTime, snap.val().frequency)
             });
+        });
+        //Then when all values are updated... (promise)
+    }).then(snap => {
+        //Empty table of potentially outdated values
+        $("#table-body").empty();
+        //Reiterate through children of 'trains' in firebase
+        snap.forEach(snap => {
             //Append all data to a table data cell, table row, and then to HTML element with id = table-body
             var newTrainRow = $("<tr><td>" + snap.val().name + "</td><td>" + snap.val().destination + "</td><td>" + snap.val().frequency + " min" + "</td><td>" + snap.val().initialTime + "</td><td>" + snap.val().newArrival + "</td><td>" + snap.val().minutesAway + "</td></tr>");
             $("#table-body").append(newTrainRow);
-        });
+        })
+    }, error => {
+        console.log(error);
     });
 }
 
