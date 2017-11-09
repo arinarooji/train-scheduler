@@ -12,17 +12,6 @@ firebase.initializeApp(config);
 //Reference the database
 var database = firebase.database();
 
-//Update newArrival/minutesAway for all trains in database when page loads
-//Old trains will have updated arrival times...
-database.ref('trains/').once("value", snap => {
-    snap.forEach(snap => {
-        snap.ref.update({
-            newArrival : NewArrival(snap.val().initialTime, snap.val().frequency),
-            minutesAway: moment(snap.val().newArrival, 'HH:mm').fromNow(moment().format("HH:mm"))
-        });
-    });
-});
-
 //Update table when values change in the server
 database.ref('trains/').on("value", snap => {
     $("#table-body").empty();
@@ -40,7 +29,7 @@ $(".btn").on("click", function () {
     var timeInput  = $("#time-input").val().trim();
 
     //If all fields are entered correctly...
-    if (nameInput !== "" && placeInput !== "" && !isNaN(rateInput) && rateInput > 1 && timeInput !== "") {
+    if (nameInput !== "" && placeInput !== "" && !isNaN(rateInput) && rateInput > 1 && rateInput < 1440 && timeInput !== "") {
         //Create a local train object with properties equal to respective input values
         var train = {
             name       : nameInput,
@@ -55,28 +44,19 @@ $(".btn").on("click", function () {
     }
 });
 
-//Update minutesAway every 20 seconds (accuracy)
+//Update minutesAway every 15 seconds (accuracy)
 setInterval( function() {
-    //Reference current time
-    var current = moment().format("HH:mm");
     database.ref('trains/').once("value", snap => {
         //Iterate through firebase
         snap.forEach(snap => {
-            //Reference time left for current train
-            var timeLeft = moment(snap.val().newArrival, 'HH:mm').fromNow(current);
-            //If a few seconds left, update new arrival time
-            if (timeLeft === 'a few seconds') {
-                snap.ref.update({
-                    newArrival: moment(snap.val().newArrival, "HH:mm").add(snap.val().frequency, "minutes").format("HH:mm")
-                });
-            }
-            //Update minutes away
+            //Update new arrival, minutes away
             snap.ref.update({
+                newArrival: NewArrival(snap.val().initialTime, snap.val().frequency),
                 minutesAway: moment(snap.val().newArrival, 'HH:mm').fromNow(moment().format("HH:mm"))
             });
         });
     });
-}, 20000)
+}, 15000)
 
 
 
@@ -105,19 +85,9 @@ function NewArrival(firstArrival, frequency) {
     return nextArrival;
 }
 
-//AppendToTable: Appends train data to the HTML table body
+//AppendToTable: Appends train data to the HTML element with id = table-body
 function AppendToTable(train) {
-    //Create a data cell for each variable
-    var name        = $("<td>").append(train.name);
-    var destination = $("<td>").append(train.destination);
-    var frequency   = $("<td>").append(train.frequency);
-    var initialTime = $("<td>").append(train.initialTime);
-    var newArrival  = $("<td>").append(train.newArrival);
-    var minutesAway = $("<td>").append(train.minutesAway);
-
-    //Append all data to row in correct order
-    var newTrainRow = $("<tr>").append(name, destination, frequency, initialTime, newArrival, minutesAway);
-
-    //All data in correct order goes to the table body
+    var newTrainRow = $("<tr><td>" + train.name + "</td><td>" + train.destination + "</td><td>" + train.frequency + " min" + "</td><td>" + train.initialTime + "</td><td>" + train.newArrival + "</td><td>" + train.minutesAway + "</td></tr>");
     $("#table-body").append(newTrainRow);
 }
+

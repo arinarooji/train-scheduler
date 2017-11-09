@@ -1,8 +1,8 @@
 body {
     background-image: url("../images/cloud.png");
     background-repeat: repeat;
-    animation: animatedBackground 20s linear infinite;
-    max-height:150%;
+    /*animation: animatedBackground 20s linear infinite;
+    max-height:150%;*/
 }
 form {
     padding: 10px;
@@ -24,11 +24,11 @@ form {
     animation:  goRight 7s infinite;
 }
 
-@keyframes animatedBackground {
+/*@keyframes animatedBackground {
 	0% { background-position: 0 0; }
     50% { background-position: 50% 0; }
     100% { background-position: 0% 0; }
-}
+}*/
 
 @keyframes goRight {
     from {
